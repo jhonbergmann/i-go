@@ -1,0 +1,75 @@
+import {useState} from 'react'
+import {Alert, FlatList, Keyboard, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {ptBR} from 'date-fns/locale'
+import {format} from 'date-fns'
+
+import {Participant} from '@/screens/components/Participant'
+import {styles} from './style'
+
+export function Home() {
+  const [participants, setParticipants] = useState<string[]>([])
+  const [participantName, setParticipantName] = useState<string>('')
+
+  const todayDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' yyyy'.'", {
+    locale: ptBR,
+  })
+
+  function handleParticipantAdd() {
+    if (participants.includes(participantName)) {
+      return Alert.alert('Participante existe', 'Já existe um participante na lista com esse nome.')
+    }
+
+    setParticipants((prevState) => [...prevState, participantName])
+    setParticipantName('')
+    Keyboard.dismiss()
+  }
+
+  function handleParticipantRemove(name: string) {
+    function remove() {
+      setParticipants((prevState) => prevState.filter((participant) => participant !== name))
+      Keyboard.dismiss()
+    }
+
+    return Alert.alert('Remover', `Remover o participante ${name}?`, [
+      {
+        text: 'Sim',
+        onPress: () => remove(),
+      },
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+    ])
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.eventName}>Nome do evento</Text>
+      <Text style={styles.eventDate}>{todayDate}</Text>
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
+          placeholder="Nome do participante"
+          placeholderTextColor="#6B6B6B"
+          onChangeText={setParticipantName}
+          value={participantName}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
+          <Text style={styles.buttonText}>+</Text>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        data={participants}
+        keyExtractor={(item) => item}
+        keyboardShouldPersistTaps="always"
+        renderItem={({item}) => <Participant key={item} name={item} onRemove={() => handleParticipantRemove(item)} />}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <Text style={styles.listEmptyText}>
+            Ninguém chegou no evento ainda? Adicione participantes a sua lista de presença.
+          </Text>
+        )}
+      />
+    </View>
+  )
+}
