@@ -7,16 +7,10 @@
   <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/jhonbergmann/i-go" />
 </p>
 
-<br>
+<p align="center">Save participants who will attend the event.</p>
 
 <p align="center">
   <img src="docs/assets/illustration.png" alt="illustration" >
-</p>
-
-<br>
-
-<p align="center">
-  Save participants to your list.
 </p>
 
 ## 📦 Tech Stack
