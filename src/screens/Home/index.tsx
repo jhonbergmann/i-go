@@ -15,6 +15,10 @@ export function Home() {
   })
 
   function handleParticipantAdd() {
+    if (!participantName) {
+      return Alert.alert('Nome inválido', 'Por favor, informe o nome do participante.')
+    }
+
     if (participants.includes(participantName)) {
       return Alert.alert('Participante existe', 'Já existe um participante na lista com esse nome.')
     }
